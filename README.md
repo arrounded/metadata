@@ -3,6 +3,8 @@
 [![Build Status](http://img.shields.io/travis/arrounded/metadata.svg?style=flat-square)](https://travis-ci.org/arrounded/metadata)
 [![Latest Stable Version](http://img.shields.io/packagist/v/arrounded/metadata.svg?style=flat-square)](https://packagist.org/packages/arrounded/metadata)
 [![Total Downloads](http://img.shields.io/packagist/dt/arrounded/metadata.svg?style=flat-square)](https://packagist.org/packages/arrounded/metadata)
+[![Scrutinizer Quality Score](http://img.shields.io/scrutinizer/g/arrounded/metadata.svg?style=flat-square)](https://scrutinizer-ci.com/g/arrounded/metadata/)
+[![Code Coverage](http://img.shields.io/scrutinizer/coverage/g/arrounded/metadata.svg?style=flat-square)](https://scrutinizer-ci.com/g/arrounded/metadata/)
 
 ## Install
 

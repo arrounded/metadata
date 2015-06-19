@@ -61,7 +61,7 @@ class Metadata
      */
     public function setDefaultsFromFile($file)
     {
-        $file = new Reader($file);
+        $file = Reader::createFromString($file);
 
         // Fetch columns
         $rows = $file->fetchOne();

@@ -2,7 +2,6 @@
 namespace Arrounded\Metadata;
 
 use Illuminate\Container\Container;
-use Illuminate\Support\Facades\URL;
 use League\Csv\Reader;
 
 /**
@@ -66,7 +65,7 @@ class Metadata
         // Fetch entries and set defaults
         $entries = $file->fetchAssoc(0);
         foreach ($entries as $entry) {
-            if (strpos(URL::current(), $entry['url']) !== false) {
+            if (strpos($this->app['url']->current(), $entry['url']) !== false) {
                 $this->defaults = $entry;
             }
         }

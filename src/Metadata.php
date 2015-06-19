@@ -17,7 +17,7 @@ class Metadata
     /**
      * @type array
      */
-    protected $defaults = [];
+    protected $metadata = [];
 
     /**
      * @type array
@@ -55,17 +55,17 @@ class Metadata
     /**
      * @return array
      */
-    public function getDefaults()
+    public function getMetadata()
     {
-        return $this->defaults;
+        return $this->metadata;
     }
 
     /**
-     * @param array $defaults
+     * @param array $metadata
      */
-    public function setDefaults($defaults)
+    public function setMetadata($metadata)
     {
-        $this->defaults = $defaults;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -73,7 +73,7 @@ class Metadata
      *
      * @param string $file
      */
-    public function setDefaultsFromFile($file)
+    public function setMetadataFromFile($file)
     {
         $file = Reader::createFromPath($file);
 
@@ -81,7 +81,7 @@ class Metadata
         $entries = $file->fetchAssoc(0);
         foreach ($entries as $entry) {
             if (strpos($this->url->current(), $entry['url']) !== false) {
-                $this->setDefaults($entry);
+                $this->setMetadata($entry);
             }
         }
     }
@@ -110,7 +110,7 @@ class Metadata
             'card' => 'summary',
             'site' => $this->project,
             'url'  => $this->url->current(),
-        ], $this->defaults, $attributes);
+        ], $this->metadata, $attributes);
 
         // Format URLs if provided
         $image = array_get($attributes, 'image');

@@ -27,9 +27,9 @@ class MetadataTest extends MetadataTestCase
 
     public function testCanReadDefaultsFromSpreadsheet()
     {
-        $this->metadata->setDefaultsFromFile(__DIR__.'/test.csv');
+        $this->metadata->setMetadataFromFile(__DIR__.'/test.csv');
 
-        $defaults = $this->metadata->getDefaults();
+        $defaults = $this->metadata->getMetadata();
         $this->assertEquals([
             'url'         => 'foo.com',
             'title'       => 'Foo',
@@ -40,7 +40,7 @@ class MetadataTest extends MetadataTestCase
 
     public function testCanRenderMetadata()
     {
-        $this->metadata->setDefaultsFromFile(__DIR__.'/test.csv');
+        $this->metadata->setMetadataFromFile(__DIR__.'/test.csv');
         $rendered = $this->metadata->render();
         $matcher  = <<<EOF
 <meta name="twitter:card" property="og:card" content="summary">
@@ -58,7 +58,7 @@ EOF;
 
     public function testCanPassAdditionalAttributes()
     {
-        $this->metadata->setDefaultsFromFile(__DIR__.'/test.csv');
+        $this->metadata->setMetadataFromFile(__DIR__.'/test.csv');
         $rendered = $this->metadata->render([
             'foo' => 'bar',
         ]);
@@ -79,7 +79,7 @@ EOF;
 
     public function testCanDefineUnwrappedProperties()
     {
-        $this->metadata->setDefaultsFromFile(__DIR__.'/test.csv');
+        $this->metadata->setMetadataFromFile(__DIR__.'/test.csv');
         $this->metadata->setUnwrapped('foo');
         $rendered = $this->metadata->render([
             'foo' => 'bar',
@@ -101,7 +101,7 @@ EOF;
 
     public function testCanDefineProject()
     {
-        $this->metadata->setDefaultsFromFile(__DIR__.'/test.csv');
+        $this->metadata->setMetadataFromFile(__DIR__.'/test.csv');
         $this->metadata->setProject('arrounded');
         $rendered = $this->metadata->render();
         $matcher  = <<<EOF

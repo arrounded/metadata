@@ -17,7 +17,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('arrounded.meta', 'Arrounded\Services\Metadata');
+        $this->app->singleton('arrounded.meta', function ($app) {
+            return new Metadata($app['url'], $app['path.public']);
+        });
     }
 
     /**

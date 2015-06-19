@@ -1,7 +1,7 @@
 <?php
 namespace Arrounded\Metadata;
 
-use Illuminate\Container\Container;
+use Illuminate\Contracts\Routing\UrlGenerator;
 use League\Csv\Reader;
 
 /**
@@ -25,16 +25,23 @@ class Metadata
     protected $unwrapped = ['title', 'keywords', 'description'];
 
     /**
-     * @type Container
+     * @type UrlGenerator
      */
-    protected $app;
+    protected $url;
 
     /**
-     * @param Container $app
+     * @type string|null
      */
-    public function __construct(Container $app)
+    protected $publicFolder;
+
+    /**
+     * @param UrlGenerator $url
+     * @param null         $publicFolder
+     */
+    public function __construct(UrlGenerator $url, $publicFolder = null)
     {
-        $this->app = $app;
+        $this->url          = $url;
+        $this->publicFolder = $publicFolder;
     }
 
     /**
@@ -65,7 +72,7 @@ class Metadata
         // Fetch entries and set defaults
         $entries = $file->fetchAssoc(0);
         foreach ($entries as $entry) {
-            if (strpos($this->app['url']->current(), $entry['url']) !== false) {
+            if (strpos($this->url->current(), $entry['url']) !== false) {
                 $this->defaults = $entry;
             }
         }
@@ -94,15 +101,15 @@ class Metadata
         $attributes = array_merge([
             'card' => 'summary',
             'site' => $this->project,
-            'url'  => $this->app['url']->current(),
+            'url'  => $this->url->current(),
         ], $this->defaults, $attributes);
 
         // Format URLs if provided
         $image = array_get($attributes, 'image');
-        if (!file_exists($this->app['path.public'].$image) || strpos($image, 'placeholder') !== false) {
+        if (!file_exists($this->publicFolder.$image) || strpos($image, 'placeholder') !== false) {
             $image = $this->getPlaceholderIllustration();
         }
-        $attributes['image'] = $this->app['url']->asset($image);
+        $attributes['image'] = $this->url->asset($image);
 
         // Get Twitter equivalents
         $twitterProperties = [

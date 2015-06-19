@@ -63,12 +63,8 @@ class Metadata
     {
         $file = Reader::createFromString($file);
 
-        // Fetch columns
-        $rows = $file->fetchOne();
-        $file->setOffset(1);
-
         // Fetch entries and set defaults
-        $entries = $file->fetchAssoc($rows);
+        $entries = $file->fetchAssoc(0);
         foreach ($entries as $entry) {
             if (strpos(URL::current(), $entry['url']) !== false) {
                 $this->defaults = $entry;

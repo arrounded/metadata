@@ -53,6 +53,14 @@ class Metadata
     }
 
     /**
+     * @return array
+     */
+    public function getDefaults()
+    {
+        return $this->defaults;
+    }
+
+    /**
      * @param array $defaults
      */
     public function setDefaults($defaults)
@@ -67,23 +75,23 @@ class Metadata
      */
     public function setDefaultsFromFile($file)
     {
-        $file = Reader::createFromString($file);
+        $file = Reader::createFromPath($file);
 
         // Fetch entries and set defaults
         $entries = $file->fetchAssoc(0);
         foreach ($entries as $entry) {
             if (strpos($this->url->current(), $entry['url']) !== false) {
-                $this->defaults = $entry;
+                $this->setDefaults($entry);
             }
         }
     }
 
     /**
-     * @param array $unwrapped
+     * @param string|array $unwrapped
      */
     public function setUnwrapped($unwrapped)
     {
-        $this->unwrapped = array_merge(['title', 'keywords', 'description'], $unwrapped);
+        $this->unwrapped = array_merge(['title', 'keywords', 'description'], (array) $unwrapped);
     }
 
     /**

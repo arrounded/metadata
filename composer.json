@@ -32,10 +32,7 @@
     "autoload-dev": {
         "psr-4": {
             "Arrounded\\Metadata\\": "tests"
-        },
-        "files": [
-            "tests/helpers.php"
-        ]
+        }
     },
     "scripts": {
         "test": "phpunit",

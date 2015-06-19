@@ -1,4 +1,14 @@
 <?php
+
+/*
+ * This file is part of Arrounded
+ *
+ * (c) Madewithlove <heroes@madewithlove.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Arrounded\Metadata;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
@@ -10,27 +20,27 @@ use League\Csv\Reader;
 class Metadata
 {
     /**
-     * @type string
+     * @var string
      */
     protected $project = 'website';
 
     /**
-     * @type array
+     * @var array
      */
     protected $metadata = [];
 
     /**
-     * @type array
+     * @var array
      */
     protected $unwrapped = ['title', 'keywords', 'description'];
 
     /**
-     * @type UrlGenerator
+     * @var UrlGenerator
      */
     protected $url;
 
     /**
-     * @type string|null
+     * @var string|null
      */
     protected $publicFolder;
 
@@ -40,7 +50,7 @@ class Metadata
      */
     public function __construct(UrlGenerator $url, $publicFolder = null)
     {
-        $this->url          = $url;
+        $this->url = $url;
         $this->publicFolder = $publicFolder;
     }
 
@@ -109,7 +119,7 @@ class Metadata
         $attributes = array_merge([
             'card' => 'summary',
             'site' => $this->project,
-            'url'  => $this->url->current(),
+            'url' => $this->url->current(),
         ], $this->metadata, $attributes);
 
         // Format URLs if provided
@@ -121,7 +131,7 @@ class Metadata
 
         // Get Twitter equivalents
         $twitterProperties = [
-            'name'  => 'title',
+            'name' => 'title',
             'image' => 'image:src',
         ];
 
@@ -145,7 +155,7 @@ class Metadata
      */
     protected function getWrapper($twitter, $name, $value)
     {
-        if (in_array($name, $this->unwrapped)) {
+        if (in_array($name, $this->unwrapped, true)) {
             return sprintf('<meta name="%s" contents="%s">', $name, $value);
         }
 

@@ -1,4 +1,14 @@
 <?php
+
+/*
+ * This file is part of Arrounded
+ *
+ * (c) Madewithlove <heroes@madewithlove.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Arrounded\Metadata;
 
 use Illuminate\Contracts\Routing\UrlGenerator;
@@ -8,7 +18,7 @@ use Mockery\MockInterface;
 class MetadataTest extends MetadataTestCase
 {
     /**
-     * @type Metadata
+     * @var Metadata
      */
     protected $metadata;
 
@@ -31,9 +41,9 @@ class MetadataTest extends MetadataTestCase
 
         $defaults = $this->metadata->getMetadata();
         $this->assertEquals([
-            'url'         => 'foo.com',
-            'title'       => 'Foo',
-            'keywords'    => 'foo;bar',
+            'url' => 'foo.com',
+            'title' => 'Foo',
+            'keywords' => 'foo;bar',
             'description' => 'Foobar',
         ], $defaults);
     }
@@ -42,7 +52,7 @@ class MetadataTest extends MetadataTestCase
     {
         $this->metadata->setMetadataFromFile(__DIR__.'/test.csv');
         $rendered = $this->metadata->render();
-        $matcher  = <<<EOF
+        $matcher = <<<EOF
 <meta name="twitter:card" property="og:card" content="summary">
 <meta name="twitter:site" property="og:site" content="website">
 <meta name="twitter:url" property="og:url" content="foo.com">
@@ -62,7 +72,7 @@ EOF;
         $rendered = $this->metadata->render([
             'foo' => 'bar',
         ]);
-        $matcher  = <<<EOF
+        $matcher = <<<EOF
 <meta name="twitter:card" property="og:card" content="summary">
 <meta name="twitter:site" property="og:site" content="website">
 <meta name="twitter:url" property="og:url" content="foo.com">
@@ -84,7 +94,7 @@ EOF;
         $rendered = $this->metadata->render([
             'foo' => 'bar',
         ]);
-        $matcher  = <<<EOF
+        $matcher = <<<EOF
 <meta name="twitter:card" property="og:card" content="summary">
 <meta name="twitter:site" property="og:site" content="website">
 <meta name="twitter:url" property="og:url" content="foo.com">
@@ -104,7 +114,7 @@ EOF;
         $this->metadata->setMetadataFromFile(__DIR__.'/test.csv');
         $this->metadata->setProject('arrounded');
         $rendered = $this->metadata->render();
-        $matcher  = <<<EOF
+        $matcher = <<<EOF
 <meta name="twitter:card" property="og:card" content="summary">
 <meta name="twitter:site" property="og:site" content="arrounded">
 <meta name="twitter:url" property="og:url" content="foo.com">

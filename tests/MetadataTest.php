@@ -11,9 +11,11 @@
 
 namespace Arrounded\Metadata;
 
+use Illuminate\Cache\ArrayStore;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Mockery;
 use Mockery\MockInterface;
+use SplFileInfo;
 
 class MetadataTest extends MetadataTestCase
 {
@@ -22,9 +24,14 @@ class MetadataTest extends MetadataTestCase
      */
     protected $metadata;
 
+    /**
+     * @var MockInterface
+     */
+    protected $url;
+
     public function setUp()
     {
-        $url = Mockery::mock(UrlGenerator::class, function (MockInterface $mock) {
+        $this->url = Mockery::mock(UrlGenerator::class, function (MockInterface $mock) {
             return $mock
                 ->shouldReceive('current')->andReturn('foo.com')
                 ->shouldReceive('asset')->andReturnUsing(function ($asset) {
@@ -32,7 +39,7 @@ class MetadataTest extends MetadataTestCase
                 });
         });
 
-        $this->metadata = new Metadata($url);
+        $this->metadata = new Metadata($this->url, new ArrayStore());
     }
 
     public function testCanReadDefaultsFromSpreadsheet()
@@ -126,5 +133,33 @@ EOF;
 EOF;
 
         $this->assertEquals($matcher, $rendered);
+    }
+
+    public function testWillUseCachedData()
+    {
+        $file = __DIR__.'/test.csv';
+
+        $cache = new ArrayStore();
+        $cache->forever('arrounded.meta.'.$file, [
+            'last_modified_at' => (new SplFileInfo($file))->getMTime(),
+            'meta' => [
+                [
+                    'url' => 'foo.com',
+                    'title' => 'Bar',
+                    'keywords' => 'bar;foo',
+                    'description' => 'Barfoo',
+                ]
+            ]
+        ]);
+
+        $metadata = new Metadata($this->url, $cache);
+        $metadata->setMetadataFromFile($file);
+
+        $this->assertEquals([
+            'url' => 'foo.com',
+            'title' => 'Bar',
+            'keywords' => 'bar;foo',
+            'description' => 'Barfoo',
+        ], $metadata->getMetadata());
     }
 }

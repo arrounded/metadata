@@ -11,7 +11,10 @@
 
 namespace Arrounded\Metadata;
 
+use Illuminate\Cache\CacheManager;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Contracts\Routing\UrlGenerator;
+use SplFileInfo;
 use League\Csv\Reader;
 
 /**
@@ -40,17 +43,24 @@ class Metadata
     protected $url;
 
     /**
+     * @var Store
+     */
+    protected $cache;
+
+    /**
      * @var string|null
      */
     protected $publicFolder;
 
     /**
      * @param UrlGenerator $url
-     * @param null         $publicFolder
+     * @param Store $cache
+     * @param null $publicFolder
      */
-    public function __construct(UrlGenerator $url, $publicFolder = null)
+    public function __construct(UrlGenerator $url, Store $cache, $publicFolder = null)
     {
         $this->url = $url;
+        $this->cache = $cache;
         $this->publicFolder = $publicFolder;
     }
 
@@ -85,11 +95,7 @@ class Metadata
      */
     public function setMetadataFromFile($file)
     {
-        $file = Reader::createFromPath($file);
-
-        // Fetch entries and set defaults
-        $entries = $file->fetchAssoc(0);
-        foreach ($entries as $entry) {
+        foreach ($this->getEntriesFromCache($file) as $entry) {
             if (strpos($this->url->current(), $entry['url']) !== false) {
                 $this->setMetadata($entry);
             }
@@ -168,5 +174,62 @@ class Metadata
     protected function getPlaceholderIllustration()
     {
         return 'app/img/logo.png';
+    }
+
+    /**
+     * @param $file
+     *
+     * @return array
+     */
+    protected function getEntriesFromCSV($file)
+    {
+        return Reader::createFromPath($file)->fetchAssoc(0);
+    }
+
+    /**
+     * @param $file
+     *
+     * @return array
+     */
+    protected function getEntriesFromCache($file)
+    {
+        $identifier = $this->getCacheIdentifier($file);
+        $lastModifiedAt = (new SplFileInfo($file))->getMTime();
+
+        if ($cached = $this->cache->get($identifier)) {
+            if (!$this->isModified($cached, $lastModifiedAt)) {
+                return $cached['meta'];
+            }
+        };
+
+        $entries = $this->getEntriesFromCSV($file);
+
+        $this->cache->forever($identifier, [
+            'last_modified_at' => $lastModifiedAt,
+            'meta' => $entries
+        ]);
+
+        return $entries;
+    }
+
+    /**
+     * @param $file
+     *
+     * @return string
+     */
+    protected function getCacheIdentifier($file)
+    {
+        return 'arrounded.meta.'.$file;
+    }
+
+    /**
+     * @param $cached
+     * @param $lastModifiedAt
+     *
+     * @return bool
+     */
+    protected function isModified($cached, $lastModifiedAt)
+    {
+        return $cached['last_modified_at'] !== $lastModifiedAt;
     }
 }

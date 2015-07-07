@@ -95,7 +95,8 @@ class Metadata
      */
     public function setMetadataFromFile($file)
     {
-        foreach ($this->getEntriesFromCache($file) as $entry) {
+        $entries = $this->getEntriesFromCache($file);
+        foreach ($entries as $entry) {
             if (strpos($this->url->current(), $entry['url']) !== false) {
                 $this->setMetadata($entry);
             }
@@ -177,7 +178,7 @@ class Metadata
     }
 
     /**
-     * @param $file
+     * @param string $file
      *
      * @return array
      */
@@ -187,7 +188,7 @@ class Metadata
     }
 
     /**
-     * @param $file
+     * @param string $file
      *
      * @return array
      */
@@ -200,7 +201,7 @@ class Metadata
             if (!$this->isModified($cached, $lastModifiedAt)) {
                 return $cached['meta'];
             }
-        };
+        }
 
         $entries = $this->getEntriesFromCSV($file);
 
@@ -213,7 +214,7 @@ class Metadata
     }
 
     /**
-     * @param $file
+     * @param string $file
      *
      * @return string
      */

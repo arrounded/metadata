@@ -139,16 +139,14 @@ EOF;
     {
         $file = __DIR__.'/test.csv';
 
-        $cache = new ArrayStore();
-        $cache->forever('arrounded.meta.'.$file, [
-            'last_modified_at' => (new SplFileInfo($file))->getMTime(),
-            'meta' => [
-                [
-                    'url' => 'foo.com',
-                    'title' => 'Bar',
-                    'keywords' => 'bar;foo',
-                    'description' => 'Barfoo',
-                ]
+        $cache = (new ArrayStore());
+        $modifiedAt = (new SplFileInfo($file))->getMTime();
+        $cache->tags('arrounded.meta')->forever('arrounded.meta.'.$file.$modifiedAt, [
+            [
+                'url' => 'foo.com',
+                'title' => 'Bar',
+                'keywords' => 'bar;foo',
+                'description' => 'Barfoo',
             ]
         ]);
 

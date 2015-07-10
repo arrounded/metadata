@@ -12,6 +12,7 @@
 namespace Arrounded\Metadata;
 
 use Illuminate\Cache\CacheManager;
+use Illuminate\Cache\TaggedCache;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use SplFileInfo;
@@ -43,7 +44,7 @@ class Metadata
     protected $url;
 
     /**
-     * @var Store
+     * @var TaggedCache
      */
     protected $cache;
 
@@ -60,7 +61,7 @@ class Metadata
     public function __construct(UrlGenerator $url, Store $cache, $publicFolder = null)
     {
         $this->url = $url;
-        $this->cache = $cache;
+        $this->cache = $cache->tags('arrounded.meta');
         $this->publicFolder = $publicFolder;
     }
 
@@ -195,22 +196,10 @@ class Metadata
     protected function getEntriesFromCache($file)
     {
         $identifier = $this->getCacheIdentifier($file);
-        $lastModifiedAt = (new SplFileInfo($file))->getMTime();
 
-        if ($cached = $this->cache->get($identifier)) {
-            if (!$this->isModified($cached, $lastModifiedAt)) {
-                return $cached['meta'];
-            }
-        }
-
-        $entries = $this->getEntriesFromCSV($file);
-
-        $this->cache->forever($identifier, [
-            'last_modified_at' => $lastModifiedAt,
-            'meta' => $entries
-        ]);
-
-        return $entries;
+        return $this->cache->rememberForever($identifier, function () use ($file) {
+            return $this->getEntriesFromCSV($file);
+        });
     }
 
     /**
@@ -220,7 +209,9 @@ class Metadata
      */
     protected function getCacheIdentifier($file)
     {
-        return 'arrounded.meta.'.$file;
+        $lastModifiedAt = (new SplFileInfo($file))->getMTime();
+
+        return 'arrounded.meta.'.$file.$lastModifiedAt;
     }
 
     /**

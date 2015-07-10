@@ -55,13 +55,18 @@ class Metadata
 
     /**
      * @param UrlGenerator $url
-     * @param Store $cache
-     * @param null $publicFolder
+     * @param Store        $cache
+     * @param null         $publicFolder
      */
     public function __construct(UrlGenerator $url, Store $cache, $publicFolder = null)
     {
-        $this->url = $url;
-        $this->cache = $cache->tags('arrounded.meta');
+        $this->url   = $url;
+        $this->cache = $cache;
+
+        if (method_exists($this->cache, 'tags')) {
+            $this->cache = $cache->tags('arrounded.meta');
+        }
+
         $this->publicFolder = $publicFolder;
     }
 
@@ -183,7 +188,7 @@ class Metadata
      *
      * @return array
      */
-    protected function getEntriesFromCSV($file)
+    protected function getEntriesFromCsv($file)
     {
         return Reader::createFromPath($file)->fetchAssoc(0);
     }
@@ -198,7 +203,7 @@ class Metadata
         $identifier = $this->getCacheIdentifier($file);
 
         return $this->cache->rememberForever($identifier, function () use ($file) {
-            return $this->getEntriesFromCSV($file);
+            return $this->getEntriesFromCsv($file);
         });
     }
 

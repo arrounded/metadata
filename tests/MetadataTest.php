@@ -63,9 +63,9 @@ class MetadataTest extends MetadataTestCase
 <meta name="twitter:card" property="og:card" content="summary">
 <meta name="twitter:site" property="og:site" content="website">
 <meta name="twitter:url" property="og:url" content="foo.com">
-<meta name="title" contents="Foo">
-<meta name="keywords" contents="foo;bar">
-<meta name="description" contents="Foobar">
+<meta name="title" content="Foo">
+<meta name="keywords" content="foo;bar">
+<meta name="description" content="Foobar">
 <meta name="twitter:image:src" property="og:image" content="http://foo.com/assets/app/img/logo.png">
 
 EOF;
@@ -83,9 +83,9 @@ EOF;
 <meta name="twitter:card" property="og:card" content="summary">
 <meta name="twitter:site" property="og:site" content="website">
 <meta name="twitter:url" property="og:url" content="foo.com">
-<meta name="title" contents="Foo">
-<meta name="keywords" contents="foo;bar">
-<meta name="description" contents="Foobar">
+<meta name="title" content="Foo">
+<meta name="keywords" content="foo;bar">
+<meta name="description" content="Foobar">
 <meta name="twitter:foo" property="og:foo" content="bar">
 <meta name="twitter:image:src" property="og:image" content="http://foo.com/assets/app/img/logo.png">
 
@@ -105,10 +105,10 @@ EOF;
 <meta name="twitter:card" property="og:card" content="summary">
 <meta name="twitter:site" property="og:site" content="website">
 <meta name="twitter:url" property="og:url" content="foo.com">
-<meta name="title" contents="Foo">
-<meta name="keywords" contents="foo;bar">
-<meta name="description" contents="Foobar">
-<meta name="foo" contents="bar">
+<meta name="title" content="Foo">
+<meta name="keywords" content="foo;bar">
+<meta name="description" content="Foobar">
+<meta name="foo" content="bar">
 <meta name="twitter:image:src" property="og:image" content="http://foo.com/assets/app/img/logo.png">
 
 EOF;
@@ -125,9 +125,9 @@ EOF;
 <meta name="twitter:card" property="og:card" content="summary">
 <meta name="twitter:site" property="og:site" content="arrounded">
 <meta name="twitter:url" property="og:url" content="foo.com">
-<meta name="title" contents="Foo">
-<meta name="keywords" contents="foo;bar">
-<meta name="description" contents="Foobar">
+<meta name="title" content="Foo">
+<meta name="keywords" content="foo;bar">
+<meta name="description" content="Foobar">
 <meta name="twitter:image:src" property="og:image" content="http://foo.com/assets/app/img/logo.png">
 
 EOF;
